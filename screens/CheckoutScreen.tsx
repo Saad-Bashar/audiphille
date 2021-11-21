@@ -10,9 +10,19 @@ import { CartItem } from "./CartScreen"
 import Button from "../components/Button"
 import { StackNavigationProp } from "@react-navigation/stack"
 import Modal from "react-native-modal"
+import LottieView from "lottie-react-native"
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const SHIPPING_PRICE = 50
 const VAT = 500
+
+const schema = Yup.object().shape({
+    name: Yup.string().max(4, 'Must not').required('Required'),
+    email: Yup.string()
+        .email('Invalid email')
+        .required('Required'),
+    })
 
 export default function CheckoutScreen({
     navigation,
@@ -23,6 +33,18 @@ export default function CheckoutScreen({
     const totalAmount = useSelector(selectTotalAmount)
     const dispatch = useDispatch()
     const [isModalVisible, setModalVisible] = useState(false)
+
+    const formik = useFormik({
+        initialValues: {
+          name: '',
+          email: '',
+          phone: ''
+        },
+        validationSchema: schema,
+        onSubmit: values => {
+          alert(JSON.stringify(values, null, 2));
+        },
+      });
 
     const toggleModal = () => {
         setModalVisible(!isModalVisible)
@@ -45,11 +67,24 @@ export default function CheckoutScreen({
                     >
                         Billing details
                     </Text>
-                    <Input label="Name" placeholder="John Doe" />
+                    <Input 
+                        label="Name" 
+                        placeholder="John Doe" 
+                        onChangeText={formik.handleChange('name')}
+                        onBlur={formik.handleBlur('name')}
+                    />
+                    {formik.touched.name && formik.errors.name ? (
+                        <Text style={{ color: 'red'}}>{formik.errors.name}</Text>
+                    ) : null}
                     <Input
                         label="Email address"
                         placeholder="johndoe@gmail.com"
+                        onChangeText={formik.handleChange('email')}
+                        onBlur={formik.handleBlur('email')}
                     />
+                    {formik.touched.email && formik.errors.email ? (
+                        <Text style={{ color: 'red'}}>{formik.errors.email}</Text>
+                    ) : null}
                     <Input label="Phone" placeholder="+880147859958" />
                     <Text
                         textColor={colors.primary}
@@ -198,7 +233,7 @@ export default function CheckoutScreen({
                         <Button
                             title="CONTINUE & PAY"
                             style={{ width: "100%", marginTop: spacing[6] }}
-                            onPress={toggleModal}
+                            onPress={formik.handleSubmit}
                         />
                     </View>
                 </View>
@@ -212,6 +247,12 @@ export default function CheckoutScreen({
                             borderRadius: 12,
                         }}
                     >
+                        <LottieView
+                            autoPlay
+                            style={{ height: 50, width: 50, left: -4 }}
+                            source={require("../assets/images/success.json")}
+                            loop={false}
+                        />
                         <Text uppercase preset="h5">
                             Thank you
                         </Text>
@@ -279,13 +320,17 @@ export default function CheckoutScreen({
                                     x{cartItems[0].amount}
                                 </Text>
                             </View>
-                            <View
-                                style={{ alignSelf: "center", marginTop: 10 }}
-                            >
-                                <Text textColor="#777">
-                                    and {cartItems.length - 1} other item(s)
-                                </Text>
-                            </View>
+                            {
+                                cartItems.length > 1 && (
+                                    <View
+                                    style={{ alignSelf: "center", marginTop: 10 }}
+                                >
+                                    <Text textColor="#777">
+                                        and {cartItems.length - 1} other item(s)
+                                    </Text>
+                                </View>)
+                            }
+                          
                         </View>
                         <View
                             style={{

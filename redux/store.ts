@@ -1,3 +1,4 @@
+import { productsApi } from './../services/products';
 import { configureStore } from "@reduxjs/toolkit"
 import counterReducer from "./counterSlice"
 import productsReducer from "./productsSlice"
@@ -8,6 +9,7 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import { PersistGate } from "redux-persist/integration/react"
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { pokemonApi } from '../services/pokemon'
+
 import productsSlice from "./productsSlice"
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
@@ -24,7 +26,8 @@ const persistConfig = {
 }
 
 const rootReducer = combineReducers({
-  [pokemonApi.reducerPath]: pokemonApi.reducer,
+  	[pokemonApi.reducerPath]: pokemonApi.reducer,
+  	[productsApi.reducerPath]: productsApi.reducer,	
 	counter: counterReducer,
 	products: productsReducer,
 	cart: cartReducer,
@@ -33,6 +36,8 @@ const rootReducer = combineReducers({
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
-	reducer: persistedReducer,
-	middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}).concat(pokemonApi.middleware)
+	reducer: persistedReducer,	
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}).concat(pokemonApi.middleware, productsApi.middleware)
 })
+
+setupListeners(store.dispatch)

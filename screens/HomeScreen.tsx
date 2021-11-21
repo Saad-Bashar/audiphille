@@ -25,6 +25,7 @@ import { useEffect } from "react"
 import { fetchProducts, selectProductIfFeatured } from "../redux/productsSlice"
 import { RootState } from "../redux/store"
 import { FeaturedImageType } from "../data/products"
+import { useGetAllProductsQuery } from "../services/products"
 
 const FeatureBox = ({ title, image }: { title: string; image: ImageSourcePropType }) => {
 	const navigation = useNavigation()
@@ -39,6 +40,7 @@ const FeatureBox = ({ title, image }: { title: string; image: ImageSourcePropTyp
 				return navigation.navigate("Earphones")
 		}
 	}
+	
 	return (
 		<Pressable
 			onPress={() => onFeaturePress()}
@@ -137,8 +139,7 @@ export default function HomeScreen() {
 	const dispatch = useDispatch()
 	const status = useSelector((state: RootState) => state.products.status)
 	const featuredProducts = useSelector(selectProductIfFeatured);
-	console.log(featuredProducts)
-
+	
 	useEffect(() => {
 		if(status === 'idle') {
 			dispatch(fetchProducts())

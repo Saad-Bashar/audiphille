@@ -179,6 +179,7 @@ export default function CartScreen({
 						<Button
 							title="CHECKOUT"
 							style={{ alignSelf: "center", width: "100%" }}
+							onPress={() => navigation.navigate("Checkout")}
 						/>
 					</View>
 				</View>

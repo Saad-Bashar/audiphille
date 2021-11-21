@@ -16,6 +16,7 @@ import { useSelector } from "react-redux"
 import { selectProductsByCategory } from "../redux/productsSlice"
 import { ProductType } from "../data/products"
 import { StackNavigationProp } from "@react-navigation/stack"
+import { RootState } from "@reduxjs/toolkit/dist/query/core/apiState"
 
 function HeadphonesScreen({
 	navigation,

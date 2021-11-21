@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../redux/cartSlice'
 import { showMessage } from 'react-native-flash-message'
+import { RootState } from '../redux/store'
 
 
 export interface Route {
@@ -22,8 +23,16 @@ export interface Route {
     }
 }
 
+const IT = [
+    { amount: 1, name: "Headphone Unit" },
+    { amount: 2, name: "Replacement Earcups" },
+    { amount: 1, name: "User Manual" },
+    { amount: 1, name: "3.5mm 5m Audio Cable" },
+    { amount: 1, name: "Travel Bag" },
+  ]
+
 export default function ProductDetailsScreen({navigation, route}: {navigation: StackNavigationProp<any>, route: Route}) {
-    const product : ProductType = useSelector(state => selectProductById(state, route.params.id))
+    const product : ProductType = useSelector((state : RootState) => selectProductById(state, route.params.id))
     const {id, name, featuredImage, description, price, category, features, includedItems, images} = product
     const [amount, setAmount] = useState(0)
     const dispatch = useDispatch()
@@ -89,7 +98,7 @@ export default function ProductDetailsScreen({navigation, route}: {navigation: S
 
                     <View style={{marginVertical: spacing[5]}}>
                         <Text preset="h4">IN THE BOX</Text>
-                        {includedItems.map(item => 
+                        {IT.map(item => 
                             <View key={item.name} style={{flexDirection: 'row', alignItems: 'center', marginVertical: spacing[3]}}>
                                 <Text preset="h6" textColor={colors.primary}>{item.amount}x</Text>
                                 <Text textColor="#7d7d7d" style={{marginLeft: spacing[3]}}>{item.name}</Text>

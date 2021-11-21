@@ -7,12 +7,12 @@ import { colors, spacing } from "../theme"
 import Button from "../components/Button"
 import BannerFooter from "../components/BannerFooter"
 import { useSelector } from "react-redux"
-import { selectProductsByCategory } from "../redux/productsSlice"
+import { selectEarphones, selectProductsByCategory } from "../redux/productsSlice"
 import { ProductType } from "../data/products"
 import { StackNavigationProp } from "@react-navigation/stack"
 
 function EarphonesScreen({ navigation }: { navigation: StackNavigationProp<any> }) {
-	const earphones: ProductType[] = useSelector((state) => selectProductsByCategory(state, "earphones"))
+	const earphones: ProductType[] = useSelector(selectEarphones)
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<ScrollView>
